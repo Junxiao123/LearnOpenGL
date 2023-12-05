@@ -8,6 +8,6 @@ uniform float offset;
 
 void main()
 {
-    gl_Position = vec4(aPos.x, aPos.y + offset, aPos.z, 1.0);
+    gl_Position = vec4(aPos.x + offset, aPos.y, aPos.z, 1.0);
     ourColor = aColor; // 将ourColor设置为我们从顶点数据那里得到的输入颜色
 }

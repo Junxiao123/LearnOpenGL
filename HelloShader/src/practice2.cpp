@@ -7,6 +7,7 @@
 #include "env.h"
 
 #include <iostream>
+#include <cmath>
 
 int main(int argc, char const *argv[]) {
   google::InitGoogleLogging(argv[0]);
@@ -31,7 +32,7 @@ int main(int argc, char const *argv[]) {
   };
 
   std::string shader_dir = std::string(PROJECT_PATH) + "/src/shader/";
-  Shader ourShader(shader_dir + "vertex1.vs", shader_dir + "fragment.fs");
+  Shader ourShader(shader_dir + "vertex_uniform.vs", shader_dir + "fragment.fs");
 
   // create vertex buffer
   unsigned int VBO, VAO;
@@ -69,6 +70,10 @@ int main(int argc, char const *argv[]) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     ourShader.use();
+
+    // 更新uniform offset
+    float offset = 0.5f;
+    ourShader.setFloat("offset", offset);
 
     // Draw triangle
     glBindVertexArray(VAO);
