@@ -7,7 +7,7 @@ project(HelloShader)
 set(MAIN_PATH ${PROJECT_SOURCE_DIR})
 configure_file(src/env.h.in ../src/env.h)
 
-if (POLICY CMP0072)
+if(POLICY CMP0072)
   set(OpenGL_GL_PREFERENCE LEGACY)
 endif()
 
@@ -25,5 +25,22 @@ file(GLOB project_file
   src/main.cpp)
 
 add_executable(${PROJECT_NAME} ${project_file})
-
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glfw glog)
+
+# practice1
+add_executable(practice1
+  src/common/glad.c
+  src/common/window.cpp
+  src/common/shader.cpp
+  src/practice1.cpp
+)
+target_link_libraries(practice1 ${OPENGL_LIBRARIES} glfw glog)
+
+# uniform
+add_executable(uniform
+  src/common/glad.c
+  src/common/window.cpp
+  src/common/shader.cpp
+  src/uniform.cpp
+)
+target_link_libraries(uniform ${OPENGL_LIBRARIES} glfw glog)
