@@ -3,7 +3,7 @@
 #include <glog/logging.h>
 #include <linux/limits.h>
 #include "common/shader.h"
-#include "env.h"
+#include "common/env.h"
 #include "common/window.h"
 
 #include <iostream>
@@ -80,7 +80,8 @@ int main(int argc, char const* argv[]) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   int width, height, nrChannels;
-  std::string image_dir = std::string(PROJECT_PATH) + "/image/";
+  std::string project_dir = std::string(PROJECT_PATH) + "/HelloTexture/";
+  std::string image_dir = project_dir + "/image/";
   std::string img_path = std::string(image_dir + "img1.jpg");
   stbi_set_flip_vertically_on_load(true);
   unsigned char* data = stbi_load(img_path.c_str(), &width, &height, &nrChannels, 0);

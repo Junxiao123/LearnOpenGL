@@ -3,7 +3,7 @@
 #include <glog/logging.h>
 #include <linux/limits.h>
 #include "common/shader.h"
-#include "env.h"
+#include "common/env.h"
 #include "common/window.h"
 
 #include <iostream>
@@ -38,7 +38,8 @@ int main(int argc, char const* argv[]) {
       1, 2, 3   // second triangle
   };
 
-  std::string shader_dir = std::string(PROJECT_PATH) + "/shader/";
+  std::string project_dir = std::string(PROJECT_PATH) + "/HelloTexture";
+  std::string shader_dir = project_dir + "/shader/";
   Shader ourShader(shader_dir + "vertex.vs", shader_dir + "fragment.fs");
 
   // create vertex buffer
@@ -77,7 +78,7 @@ int main(int argc, char const* argv[]) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  std::string image_dir = std::string(PROJECT_PATH) + "/image/";
+  std::string image_dir = project_dir + "/image/";
   std::string img_path = std::string(image_dir + "img1.jpg");
   int width, height, nrChannels;
   stbi_set_flip_vertically_on_load(true);

@@ -4,7 +4,7 @@
 #include <linux/limits.h>
 #include "common/shader.h"
 #include "common/window.h"
-#include "env.h"
+#include "common/env.h"
 
 #include <iostream>
 #include <cmath>
@@ -31,7 +31,8 @@ int main(int argc, char const *argv[]) {
       0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  // top
   };
 
-  std::string shader_dir = std::string(PROJECT_PATH) + "/shader/";
+  std::string project_dir = std::string(PROJECT_PATH) + "/HelloShader";
+  std::string shader_dir = project_dir + "/shader/";
   Shader ourShader(shader_dir + "vertex_uniform.vs", shader_dir + "fragment.fs");
 
   // create vertex buffer

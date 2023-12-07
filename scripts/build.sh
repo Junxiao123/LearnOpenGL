@@ -8,37 +8,27 @@ REPO_DIR=${REPO_DIR:-$(git rev-parse --show-toplevel)}
 echo "Repo name: "$REPO_DIR
 
 echo "======================================="
-echo "Usage: $0 <ProjectName>"
+echo "Usage: $0 <Target>"
 echo "example: $0 HelloWorld"
 echo "======================================="
 
-if [ -z "$1" ]; then
-  echo "Must set project name, such as HelloWorld"
-  exit 1
+BUILD_DIR=$REPO_DIR/build
+BUILD_TARGET=$1
+
+pushd $BUILD_DIR
+if [ ! -d "$BUILD_DIR" ]; then
+  mkdir -p $BUILD_DIR
+  echo "make build dir: $BUILD_DIR"
 fi
 
-PROJECT_NAME=$1
-PROJECT_PATH=$REPO_DIR/$PROJECT_NAME
-BUILD=$PROJECT_PATH/build
+cd $BUILD_DIR && cmake .. && make
 
-if [ ! -d "$PROJECT_PATH" ]; then
-  echo "Project name[$PROJECT_NAME] set error."
-  exit 1
-fi
-
-pushd $PROJECT_PATH
-if [ -d "$BUILD" ]; then
-  echo "build dir exist, rm $BUILD"
-  rm -rf $BUILD
-fi
-mkdir -p $BUILD
-
-cd $BUILD && cmake .. && make
-
-echo "Build target: " $BUILD/$PROJECT_NAME
 
 # run
-$BUILD/$PROJECT_NAME
+if [ ! -z "$BUILD_TARGET" ]; then
+  echo "Run build target=== $BUILD_DIR/$BUILD_TARGET" 
+  $BUILD_DIR/$BUILD_TARGET
+fi
 
 popd
 
