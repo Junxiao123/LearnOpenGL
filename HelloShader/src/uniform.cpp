@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
       0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  // top
   };
 
-  std::string shader_dir = std::string(PROJECT_PATH) + "/src/shader/";
+  std::string shader_dir = std::string(PROJECT_PATH) + "/shader/";
   Shader ourShader(shader_dir + "vertex.vs", shader_dir + "fragment_uniform.fs");
 
   // create vertex buffer
