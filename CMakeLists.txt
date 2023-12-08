@@ -15,6 +15,7 @@ find_package(Glog REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/third_party/include)
 
 message(WARNING, "CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -64,3 +65,11 @@ target_link_libraries(HelloTexture_practice2 ${OPENGL_LIBRARIES} libcommon glfw 
 
 add_executable(HelloTexture_practice3 HelloTexture/src/practice1.cpp)
 target_link_libraries(HelloTexture_practice3 ${OPENGL_LIBRARIES} libcommon glfw glog)
+
+# *********************** Transformations **************************
+add_executable(Transformations Transformations/src/main.cpp)
+target_link_libraries(Transformations ${OPENGL_LIBRARIES} libcommon glfw glog)
+
+# *********************** Transformations **************************
+add_executable(Transformations_practice2 Transformations/src/practice2.cpp)
+target_link_libraries(Transformations_practice2 ${OPENGL_LIBRARIES} libcommon glfw glog)

@@ -21,7 +21,7 @@ if [ ! -d "$BUILD_DIR" ]; then
   echo "make build dir: $BUILD_DIR"
 fi
 
-cd $BUILD_DIR && cmake .. && make
+cd $BUILD_DIR && cmake .. && make -j16
 
 
 # run
