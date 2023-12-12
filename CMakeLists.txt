@@ -76,3 +76,9 @@ target_link_libraries(Transformations_practice2 ${OPENGL_LIBRARIES} libcommon gl
 # *********************** CoordinateSystems **************************
 add_executable(CoordinateSystems CoordinateSystems/src/main.cpp)
 target_link_libraries(CoordinateSystems ${OPENGL_LIBRARIES} libcommon glfw glog)
+
+add_executable(CoordinateSystems_cube CoordinateSystems/src/cube.cpp)
+target_link_libraries(CoordinateSystems_cube ${OPENGL_LIBRARIES} libcommon glfw glog)
+
+add_executable(CoordinateSystems_cube10 CoordinateSystems/src/cube10.cpp)
+target_link_libraries(CoordinateSystems_cube10 ${OPENGL_LIBRARIES} libcommon glfw glog)
