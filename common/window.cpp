@@ -1,10 +1,6 @@
 #include "window.h"
 #include <glog/logging.h>
 
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-
 void Window::Init() {
   // glfw: initialize and configure
   // ------------------------------

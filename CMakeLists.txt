@@ -70,6 +70,9 @@ target_link_libraries(HelloTexture_practice3 ${OPENGL_LIBRARIES} libcommon glfw 
 add_executable(Transformations Transformations/src/main.cpp)
 target_link_libraries(Transformations ${OPENGL_LIBRARIES} libcommon glfw glog)
 
-# *********************** Transformations **************************
 add_executable(Transformations_practice2 Transformations/src/practice2.cpp)
 target_link_libraries(Transformations_practice2 ${OPENGL_LIBRARIES} libcommon glfw glog)
+
+# *********************** CoordinateSystems **************************
+add_executable(CoordinateSystems CoordinateSystems/src/main.cpp)
+target_link_libraries(CoordinateSystems ${OPENGL_LIBRARIES} libcommon glfw glog)

@@ -4,10 +4,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 class Window {
-public:
+ public:
   void Init();
   void Terminate();
   void SwapAndPoll();

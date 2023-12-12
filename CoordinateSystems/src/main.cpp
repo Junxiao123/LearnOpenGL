@@ -1,67 +1,41 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glog/logging.h>
-
+#include <linux/limits.h>
 #include "common/shader.h"
 #include "common/env.h"
 #include "common/window.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "common/stb_image.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
+#include <test/test.h>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
+#define STB_IMAGE_IMPLEMENTATION
+#include "common/stb_image.h"
 
 int main(int argc, char const* argv[]) {
   google::InitGoogleLogging("argv[0]");
 
   FLAGS_stderrthreshold = google::INFO;
   FLAGS_colorlogtostderr = true;
-  // glfw: initialize and configure
-  // ------------------------------
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  test();
 
-#ifdef __APPLE__
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+  LOG(INFO) << "==================Hello start===================";
+  LOG(INFO) << "GLM Version: " << GLM_VERSION_MAJOR << "." << GLM_VERSION_MINOR << "."
+            << GLM_VERSION_PATCH << std::endl;
 
-  // glfw window creation
-  // --------------------
-  GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-  if (window == NULL) {
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return -1;
-  }
-  glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  Window window;
+  window.Init();
 
-  // glad: load all OpenGL function pointers
-  // ---------------------------------------
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    std::cout << "Failed to initialize GLAD" << std::endl;
-    return -1;
-  }
-
-  // build and compile our shader zprogram
-  // ------------------------------------
-  std::string project_dir = std::string(PROJECT_PATH) + "/Transformations";
-  std::string shader_dir = project_dir + "/shader/";
-  Shader ourShader(shader_dir + "vertex2.vs", shader_dir + "fragment2.fs");
+  /**************************************修改部分*****************************************/
 
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   float vertices[] = {
-      // positions           // texture coords
+      // positions          // texture coords
       0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // top right
       0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,  // bottom right
       -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // bottom left
@@ -108,6 +82,10 @@ int main(int argc, char const* argv[]) {
   int width, height, nrChannels;
   stbi_set_flip_vertically_on_load(true);  // tell stb_image.h to flip loaded texture's on the y-axis.
 
+  std::string project_dir = std::string(PROJECT_PATH) + "/CoordinateSystems";
+  std::string shader_dir = project_dir + "/shader/";
+  Shader ourShader(shader_dir + "vertex.vs", shader_dir + "fragment.fs");
+
   std::string image_dir = project_dir + "/image/";
   std::string img_path = std::string(image_dir + "img1.jpg");
 
@@ -151,12 +129,22 @@ int main(int argc, char const* argv[]) {
   ourShader.setInt("texture1", 0);
   ourShader.setInt("texture2", 1);
 
+  glm::mat4 model(1.0f);
+  glm::mat4 view(1.0f);
+  glm::mat4 projection(1.0f);
+
+  model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+  ourShader.setMat4("model", model);
+  ourShader.setMat4("view", view);
+  ourShader.setMat4("projection", projection);
+
   // render loop
   // -----------
-  while (!glfwWindowShouldClose(window)) {
-    // input
-    // -----
-    processInput(window);
+  while (!window.ShouldClose()) {
+    window.ProcessInput();
 
     // render
     // ------
@@ -169,33 +157,14 @@ int main(int argc, char const* argv[]) {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
-    glm::mat4 transform = glm::mat4(1.0f);  // make sure to initialize matrix to identity matrix first
-    // first container
-    // ---------------
-    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-    // get their uniform location and set matrix (using glm::value_ptr)
-    ourShader.setMat4("transform", transform);
+    // Draw triangle
+    ourShader.use();
 
-    // with the uniform matrix set, draw the first container
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    // second transformation
-    // ---------------------
-    transform = glm::mat4(1.0f);  // reset it to identity matrix
-    transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
-    float scaleAmount = static_cast<float>(sin(glfwGetTime()));
-    transform = glm::scale(transform, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
-    ourShader.setMat4("transform", transform);
-
-    // now with the uniform matrix being replaced with new transformations, draw it again.
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-    // -------------------------------------------------------------------------------
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+    // 交换缓冲并查询IO事件
+    window.SwapAndPoll();
   }
 
   // optional: de-allocate all resources once they've outlived their purpose:
@@ -204,23 +173,8 @@ int main(int argc, char const* argv[]) {
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
 
-  // glfw: terminate, clearing all previously allocated GLFW resources.
-  // ------------------------------------------------------------------
-  glfwTerminate();
+  /**************************************修改部分*****************************************/
+
+  window.Terminate();
   return 0;
-}
-
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react
-// accordingly
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-  // make sure the viewport matches the new window dimensions; note that width and
-  // height will be significantly larger than specified on retina displays.
-  glViewport(0, 0, width, height);
 }
